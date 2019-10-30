@@ -1,6 +1,7 @@
 from tkinter import *
-import tkinter.messagebox, re
+import tkinter.messagebox
 from datetime import date
+import user as us
 
 
 def maxCharTweet(event):
@@ -35,19 +36,16 @@ def saveContent(content, name):
         print(e)
 
 
-def removeBadChars(string):
-    tmp = re.sub("[{}<>]", "", string)
-    return tmp
-
-
 def checkContent():
-    content = removeBadChars(tweetContent.get("1.0", "end-1c"))
-    name = removeBadChars(nameInput.get())
+    content = us.removeBadChars(tweetContent.get("1.0", "end-1c"))
+    name = us.removeBadChars(nameInput.get())
 
     if 0 < len(content) <= 137 and 0 < len(name) <= 136 and len(content) + len(name) <= 137:
         if "naam" in name:
             tkinter.messagebox.showwarning(title="Er ging iets fout", message="Vul een geldige naam in!")
         else:
+            nameInput.delete(0, END)
+            tweetContent.delete('1.0', END)
             saveContent(content, name)
     else:
         tkinter.messagebox.showwarning(title="Er ging iets fout",
