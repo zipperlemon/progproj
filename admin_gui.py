@@ -1,13 +1,27 @@
 from tkinter import *
 import tkinter.messagebox
 import os, re
-
+import admin as ad
 
 tweetTextList = []
 
-def removeBadChars(string):
-    tmp = re.sub("[{}<>]", "", string)
-    return tmp
+def removeFromFile():
+    tweetsFile = open("tweets/" + tweetList.get(tweetList.curselection()))
+    tweets = tweetsFile.read()
+    content = tweet.get("1.0", "end-1c")
+    contentSplit = content.split(" -")
+    tweetContent = str()
+    tweetName = contentSplit[len(contentSplit)-1]
+
+    for i in range(len(contentSplit)-1):
+        tweetContent = tweetContent + contentSplit[i]
+
+    new = tweets.replace("{{{}}}.<{}>;".format(tweetContent, tweetName), '')
+
+    writeTweetsFile = open("tweets/" + tweetList.get(tweetList.curselection()), 'w')
+    writeTweetsFile.write(new)
+
+    print(new)
 
 
 def selectTweetFile(event):
@@ -26,26 +40,27 @@ def selectTweetFile(event):
             tweetTextList.append("{} -{}".format(content, name))
 
         tweet.delete('1.0', END)
-        tweet.insert(INSERT, removeBadChars(tweetTextList[len(tweetTextList)-1]))
+        tweet.insert(INSERT, ad.removeBadChars(tweetTextList[len(tweetTextList)-1]))
     except:
         return False
 
 
 def denyTweet():
+    removeFromFile()
     if len(tweetTextList) > 0:
         tweetTextList.pop()
         tweet.delete('1.0', END)
         print(len(tweetTextList))
         if len(tweetTextList) > 0:
-            tweet.insert(INSERT, removeBadChars(tweetTextList[len(tweetTextList) - 1]))
+            tweet.insert(INSERT, ad.removeBadChars(tweetTextList[len(tweetTextList) - 1]))
 
 
-def accTweet:
+def accTweet():
+    removeFromFile()
+    content = tweet.get("1.0", "end-1c")
+    tweet.delete('1.0', END)
+    ad.sendTweet(content)
 
-
-
-
-allTweets = os.listdir("tweets")
 
 HEIGHT = 650
 WIDTH = 930
@@ -63,7 +78,7 @@ scrollbar = Scrollbar(left_frame)
 scrollbar.pack(side=RIGHT, fill=Y)
 
 tweetList = Listbox(left_frame, yscrollcommand=scrollbar.set, font="SegoeUI 12", selectmode=SINGLE, fg="#003082")
-for line in allTweets:
+for line in ad.getTweetFiles():
     tweetList.insert(END, line)
 
 tweetList.pack(side=LEFT, fill=BOTH)
@@ -81,7 +96,7 @@ tweet.place(relx=0.6, rely=0.1, relwidth=0.7, relheight=0.7, anchor='n')
 delete = Button(root, text="Weiger", font="SegoeUI 18", bg="#0063d3", fg="#FFF", command=denyTweet)
 delete.place(relx=0.25, rely=0.85, relwidth=0.325)
 
-acc = Button(root, text="Accepteer", font="SegoeUI 18", bg="#0063d3", fg="#FFF")
+acc = Button(root, text="Accepteer", font="SegoeUI 18", bg="#0063d3", fg="#FFF", command=accTweet)
 acc.place(relx=0.625, rely=0.85, relwidth=0.325)
 
 
