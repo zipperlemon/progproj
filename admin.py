@@ -1,8 +1,8 @@
-# Shaafe Khan
 from TwitterAPI import TwitterAPI # importeren twitter API
 import re, os
 
 def sendTweet(content):
+    """Stuurt de tweet naar de twitter API"""
     consumer_key = 'NewUDIZy2opOqnsWlRq3EQutT'
     consumer_secret = 'pzskqXmoSznLTPe5Qa6XjoxrgCtXT1qG305nMzVV8ZIGWg2i6H'
     access_token_key = '1188970441303568385-s6sugkh2nDv7e1Y1DFHUXaPhuQI5X6'
@@ -15,12 +15,6 @@ def sendTweet(content):
                      access_secret)
     # variable van twitterapi functie en de keys
 
-    gebr_naam = "Rick"
-    gebr_tweet = "NS is heilig test"
-
-    # naam en tweet te krijgen via GUI
-
-    # hier worden de namen en tweet samengevoegd
 
     tweet_post = api.request('statuses/update', {'status': content})
     # naam en tweet worden gepost
@@ -30,15 +24,18 @@ def sendTweet(content):
 
 
 def removeBadChars(string):
+    """Haalt verboden tekens uit een string"""
     tmp = re.sub("[{}<>]", "", string)
     return tmp
 
 
 def getTweetFiles():
+    """Haalt de files op waar tweets in staan"""
     allTweetFiles = os.listdir("tweets")
     allTweets = []
 
     for file in allTweetFiles:
+        # Voeg file alleen toe als de grote groter is dan 0 (als er dus iets in staat)
         if os.stat(os.getcwd() + "\\tweets\\" + file).st_size > 0:
             allTweets.append(file)
 
